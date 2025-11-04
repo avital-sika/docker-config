@@ -1,0 +1,39 @@
+services:
+  mysql:
+    container_name: mysql-container
+    image: mysql:latest
+    platform: linux/amd64
+    ports:
+      - "3307:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: bddMagazine
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - app-network
+
+  phpmyadmin:
+    container_name: phpmyadmin-container
+    image: phpmyadmin/phpmyadmin:latest
+    platform: linux/amd64
+    ports:
+      - "8080:80"
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+
+volumes:
+  dbdata:
+
+networks:
+  app-network:
+    driver: bridge
